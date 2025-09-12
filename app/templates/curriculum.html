@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ level }} Curriculum</title>
+</head>
+<body>
+    <h1>{{ level }} Subjects</h1>
+    <ul>
+        {% for subject in subjects %}
+        <li>{{ subject }}</li>
+        {% endfor %}
+    </ul>
+    <br>
+    <a href="/">Back to Home</a>
+</body>
+</html>
