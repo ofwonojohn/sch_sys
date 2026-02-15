@@ -1,7 +1,7 @@
-package com.school.primaryschool.service;
+package primaryschool.service;
 
-import com.school.primaryschool.model.Student;
-import com.school.primaryschool.repository.StudentRepository;
+import primaryschool.model.Student;
+import primaryschool.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

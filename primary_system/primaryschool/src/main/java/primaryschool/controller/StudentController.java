@@ -1,7 +1,7 @@
-package com.school.primaryschool.controller;
+package primaryschool.controller;
 
-import com.school.primaryschool.model.Student;
-import com.school.primaryschool.service.StudentService;
+import primaryschool.model.Student;
+import primaryschool.service.StudentService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
