@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Primary School Management</title>
+    <!-- Bootstrap CSS -->
+    <link th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" rel="stylesheet"/>
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+        }
+        #sidebar {
+            min-width: 220px;
+            max-width: 220px;
+            background: #343a40;
+            color: #fff;
+        }
+        #sidebar .nav-link {
+            color: #fff;
+        }
+        #sidebar .nav-link:hover {
+            background: #495057;
+        }
+        #content {
+            width: 100%;
+            padding: 20px;
+        }
+        .card-placeholder {
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+            border: 1px dashed #6c757d;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div id="sidebar" class="d-flex flex-column p-3">
+        <h4 class="text-center">School Menu</h4>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a th:href="@{/students}" class="nav-link">Student List</a>
+            </li>
+            <li>
+                <a th:href="@{/performance}" class="nav-link">Performance</a>
+            </li>
+            <li>
+                <a th:href="@{/teachers}" class="nav-link">Teachers</a>
+            </li>
+            <li>
+                <a th:href="@{/subjects}" class="nav-link">Subjects</a>
+            </li>
+            <li>
+                <a th:href="@{/classes}" class="nav-link">Classes</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main content -->
+    <div id="content">
+        <h1 class="mb-4">Welcome to Primary School Management System</h1>
+        <div class="row g-4">
+            <!-- School Icon -->
+            <div class="col-md-3">
+                <div class="card-placeholder">
+                    <span>🏫 School</span>
+                </div>
+            </div>
+            <!-- Motto Icon -->
+            <div class="col-md-3">
+                <div class="card-placeholder">
+                    <span>📜 Motto</span>
+                </div>
+            </div>
+            <!-- Students Icon -->
+            <div class="col-md-3">
+                <div class="card-placeholder">
+                    <span>👨‍🎓 Students</span>
+                </div>
+            </div>
+            <!-- Teachers Icon -->
+            <div class="col-md-3">
+                <div class="card-placeholder">
+                    <span>👩‍🏫 Teachers</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
