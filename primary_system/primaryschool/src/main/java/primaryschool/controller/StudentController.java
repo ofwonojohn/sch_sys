@@ -2,33 +2,38 @@ package primaryschool.controller;
 
 import primaryschool.model.Student;
 import primaryschool.service.StudentService;
+import primaryschool.service.ClassroomService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
+@RequestMapping("/students")
 public class StudentController {
 
     private final StudentService studentService;
+    private final ClassroomService classroomService;
 
-    public StudentController(StudentService studentService) {
+    public StudentController(StudentService studentService, ClassroomService classroomService) {
         this.studentService = studentService;
+        this.classroomService = classroomService;
     }
 
-    @GetMapping("/students")
-    public String viewStudents(Model model) {
+    @GetMapping
+    public String listStudents(Model model) {
         model.addAttribute("students", studentService.getAllStudents());
         return "students";
     }
 
-    @GetMapping("/students/new")
-    public String showStudentForm(Model model) {
+    @GetMapping("/new")
+    public String createStudentForm(Model model) {
         model.addAttribute("student", new Student());
+        model.addAttribute("classes", classroomService.getAllClasses());
         return "student-form";
     }
 
-    @PostMapping("/students")
-    public String saveStudent(@ModelAttribute("student") Student student) {
+    @PostMapping
+    public String saveStudent(@ModelAttribute Student student) {
         studentService.saveStudent(student);
         return "redirect:/students";
     }

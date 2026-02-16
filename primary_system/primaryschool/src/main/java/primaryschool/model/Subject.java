@@ -1,19 +1,20 @@
 package primaryschool.model;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-public class Student {
+public class Subject {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String name; // Literacy, Math, etc.
 
-    @ManyToOne
-    @JoinColumn(name = "classroom_id")
-    private Classroom classroom;
+    @ManyToMany(mappedBy = "subjects")
+    private List<Classroom> classrooms = new ArrayList<>();
 
     // Getters and Setters
     public Long getId() { return id; }
@@ -22,6 +23,6 @@ public class Student {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
-    public Classroom getClassroom() { return classroom; }
-    public void setClassroom(Classroom classroom) { this.classroom = classroom; }
+    public List<Classroom> getClassrooms() { return classrooms; }
+    public void setClassrooms(List<Classroom> classrooms) { this.classrooms = classrooms; }
 }
