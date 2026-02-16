@@ -5,93 +5,153 @@
     <title>Primary School Management</title>
     <!-- Bootstrap CSS -->
     <link th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/webjars/font-awesome/6.4.0/css/all.min.css}" rel="stylesheet"/>
     <style>
         body {
             min-height: 100vh;
-            display: flex;
+            overflow-x: hidden;
+            background: #e8f5e9; /* soft green background */
         }
+
+        /* Sidebar */
         #sidebar {
-            min-width: 220px;
-            max-width: 220px;
-            background: #343a40;
+            position: fixed;
+            left: -250px;
+            top: 0;
+            height: 100%;
+            width: 250px;
+            background-color: #2e7d32; /* darker green */
             color: #fff;
+            transition: all 0.3s;
+            z-index: 1000;
+            padding-top: 60px;
+        }
+        #sidebar.active {
+            left: 0;
         }
         #sidebar .nav-link {
             color: #fff;
+            padding: 12px 20px;
+            display: block;
         }
         #sidebar .nav-link:hover {
-            background: #495057;
+            background: #388e3c;
+            border-radius: 5px;
         }
+
+        /* Sidebar toggle button */
+        #sidebarCollapse {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            font-size: 1.5rem;
+            color: #2e7d32;
+            cursor: pointer;
+            z-index: 1100;
+        }
+
+        /* Content */
         #content {
-            width: 100%;
-            padding: 20px;
+            margin-left: 0;
+            padding: 40px 20px;
+            transition: all 0.3s;
         }
-        .card-placeholder {
-            height: 150px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #f8f9fa;
-            border: 1px dashed #6c757d;
-            border-radius: 8px;
+        #sidebar.active + #content {
+            margin-left: 250px;
+        }
+
+        /* Cards */
+        .home-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .home-card:hover {
+            transform: translateY(-5px);
+        }
+        .home-card i {
+            font-size: 3rem;
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+        .home-card h5 {
+            font-weight: 600;
+            color: #2e7d32;
         }
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
-    <div id="sidebar" class="d-flex flex-column p-3">
-        <h4 class="text-center">School Menu</h4>
-        <ul class="nav nav-pills flex-column mb-auto">
-            <li class="nav-item">
-                <a th:href="@{/students}" class="nav-link">Student List</a>
-            </li>
-            <li>
-                <a th:href="@{/performance}" class="nav-link">Performance</a>
-            </li>
-            <li>
-                <a th:href="@{/teachers}" class="nav-link">Teachers</a>
-            </li>
-            <li>
-                <a th:href="@{/subjects}" class="nav-link">Subjects</a>
-            </li>
-            <li>
-                <a th:href="@{/classes}" class="nav-link">Classes</a>
-            </li>
-        </ul>
-    </div>
 
-    <!-- Main content -->
-    <div id="content">
-        <h1 class="mb-4">Welcome to Primary School Management System</h1>
+<!-- Sidebar Toggle Button -->
+<i class="fas fa-bars" id="sidebarCollapse"></i>
+
+<!-- Sidebar -->
+<div id="sidebar">
+    <ul class="nav flex-column">
+        <li class="nav-item"><a th:href="@{/students}" class="nav-link"><i class="fas fa-user-graduate"></i> Students</a></li>
+        <li class="nav-item"><a th:href="@{/performance}" class="nav-link"><i class="fas fa-chart-line"></i> Performance</a></li>
+        <li class="nav-item"><a th:href="@{/teachers}" class="nav-link"><i class="fas fa-chalkboard-teacher"></i> Teachers</a></li>
+        <li class="nav-item"><a th:href="@{/subjects}" class="nav-link"><i class="fas fa-book"></i> Subjects</a></li>
+        <li class="nav-item"><a th:href="@{/classes}" class="nav-link"><i class="fas fa-school"></i> Classes</a></li>
+    </ul>
+</div>
+
+<!-- Main Content -->
+<div id="content">
+    <div class="container">
+        <h1 class="mb-4" style="color:#2e7d32;">Welcome to Primary School Management</h1>
         <div class="row g-4">
-            <!-- School Icon -->
+            <!-- School Info Card -->
             <div class="col-md-3">
-                <div class="card-placeholder">
-                    <span>🏫 School</span>
+                <div class="home-card">
+                    <i class="fas fa-school"></i>
+                    <h5>Our School</h5>
+                    <p>Excellence in Primary Education</p>
                 </div>
             </div>
-            <!-- Motto Icon -->
+
+            <!-- Motto Card -->
             <div class="col-md-3">
-                <div class="card-placeholder">
-                    <span>📜 Motto</span>
+                <div class="home-card">
+                    <i class="fas fa-scroll"></i>
+                    <h5>Motto</h5>
+                    <p>Knowledge, Discipline, Growth</p>
                 </div>
             </div>
-            <!-- Students Icon -->
+
+            <!-- Students Card -->
             <div class="col-md-3">
-                <div class="card-placeholder">
-                    <span>👨‍🎓 Students</span>
+                <div class="home-card">
+                    <i class="fas fa-user-graduate"></i>
+                    <h5>Students</h5>
+                    <p>Manage student data</p>
                 </div>
             </div>
-            <!-- Teachers Icon -->
+
+            <!-- Teachers Card -->
             <div class="col-md-3">
-                <div class="card-placeholder">
-                    <span>👩‍🏫 Teachers</span>
+                <div class="home-card">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <h5>Teachers</h5>
+                    <p>Manage teachers and subjects</p>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Bootstrap JS -->
-    <script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+<!-- JS -->
+<script th:src="@{/webjars/jquery/3.7.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+<script>
+    $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+        });
+    });
+</script>
 </body>
 </html>
