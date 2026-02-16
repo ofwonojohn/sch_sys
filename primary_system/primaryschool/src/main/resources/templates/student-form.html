@@ -9,8 +9,8 @@
     Name: <input type="text" th:field="*{name}" /><br/><br/>
 
     Class:
-    <select th:field="*{classroom}">
-        <option th:each="c : ${classes}" th:value="${c}" th:text="${c.name}"></option>
+    <select th:field="*{classroom.id}">
+        <option th:each="c : ${classes}" th:value="${c.id}" th:text="${c.name}"></option>
     </select><br/><br/>
 
     <button type="submit">Save</button>

@@ -1,5 +1,6 @@
 package primaryschool.controller;
 
+import primaryschool.model.Classroom;
 import primaryschool.model.Student;
 import primaryschool.service.StudentService;
 import primaryschool.service.ClassroomService;
@@ -34,7 +35,19 @@ public class StudentController {
 
     @PostMapping
     public String saveStudent(@ModelAttribute Student student) {
+        if (student.getClassroom() != null && student.getClassroom().getId() != null) {
+            // Fetch classroom from DB
+            Classroom classroom = classroomService.getAllClasses()
+                .stream()
+                .filter(c -> c.getId().equals(student.getClassroom().getId()))
+                .findFirst()
+                .orElse(null);
+            student.setClassroom(classroom);
+        }
+
         studentService.saveStudent(student);
         return "redirect:/students";
     }
+
+
 }
