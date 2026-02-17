@@ -1,10 +1,12 @@
 package primaryschool.service;
 
-import primaryschool.model.Student;
-import primaryschool.repository.StudentRepository;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import primaryschool.model.Student;
+import primaryschool.model.Classroom;
+import primaryschool.repository.StudentRepository;
 
 @Service
 public class StudentService {
@@ -19,7 +21,11 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
-    public void saveStudent(Student student) {
-        studentRepository.save(student);
+    public List<Student> getStudentsByClassroom(Classroom classroom) {
+        return studentRepository.findByClassroom(classroom);
+    }
+
+    public Student saveStudent(Student student) {
+        return studentRepository.save(student);
     }
 }
