@@ -1,42 +1,36 @@
 package primaryschool.controller;
 
-import java.util.List;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import primaryschool.model.Classroom;
-import primaryschool.model.Student;
 import primaryschool.service.ClassroomService;
 import primaryschool.service.StudentService;
 
 @Controller
+@RequestMapping("/classes")
 public class ClassController {
 
-    private final ClassroomService classroomService;
-    private final StudentService studentService;
+    @Autowired
+    private ClassroomService classroomService;
 
-    public ClassController(ClassroomService classroomService,
-                           StudentService studentService) {
-        this.classroomService = classroomService;
-        this.studentService = studentService;
-    }
+    @Autowired
+    private StudentService studentService;
 
-    @GetMapping("/classes")
-    public String viewClasses(@RequestParam(required = false) Long classId,
-                              Model model) {
+    @GetMapping
+    public String viewClasses(
+            @RequestParam(required = false) Long classId,
+            Model model) {
 
-        List<Classroom> classes = classroomService.getAllClasses();
-        model.addAttribute("classes", classes);
+        model.addAttribute("classes", classroomService.getAllClasses());
 
         if (classId != null) {
-            Classroom selectedClass = classroomService.getClassroomById(classId);
-            List<Student> students = studentService.getStudentsByClassroom(selectedClass);
+            Classroom classroom = classroomService.getClassroomById(classId);
 
-            model.addAttribute("selectedClass", selectedClass);
-            model.addAttribute("students", students);
+            model.addAttribute("selectedClass", classroom);
+            model.addAttribute("students", studentService.getStudentsByClassroom(classroom));
         }
 
         return "classes";
