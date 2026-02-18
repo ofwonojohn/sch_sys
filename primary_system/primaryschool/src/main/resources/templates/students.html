@@ -2,21 +2,50 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Students</title>
+    <link rel="stylesheet" th:href="@{/css/students.css}">
 </head>
 <body>
-<h1>Students List</h1>
-<a th:href="@{/students/new}">Add New Student</a>
-<table border="1">
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Class</th>
-    </tr>
-    <tr th:each="s : ${students}">
-        <td th:text="${s.id}"></td>
-        <td th:text="${s.name}"></td>
-        <td th:text="${s.classroom.name}"></td>
-    </tr>
-</table>
+
+<div class="container">
+
+    <h2>Students List</h2>
+
+    <!-- ================= FILTER SECTION ================= -->
+    <form method="get" th:action="@{/students}" class="filter-box">
+        <label>Filter by Class:</label>
+
+        <select name="classId">
+            <option value="">All Classes</option>
+            <option th:each="cls : ${classes}"
+                    th:value="${cls.id}"
+                    th:text="${cls.name}"
+                    th:selected="${selectedClassId == cls.id}">
+            </option>
+        </select>
+
+        <button type="submit">Filter</button>
+    </form>
+
+    <!-- ================= TABLE ================= -->
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Class</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr th:each="student : ${students}">
+                <td th:text="${student.id}"></td>
+                <td th:text="${student.name}"></td>
+                <td th:text="${student.classroom.name}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
 </body>
 </html>
