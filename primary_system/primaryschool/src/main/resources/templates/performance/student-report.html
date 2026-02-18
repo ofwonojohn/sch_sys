@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Report Card - Primary School System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        .header h1 { color: #333; font-size: 2em; margin-bottom: 10px; }
+        .header p { color: #666; }
+        .nav { display: flex; gap: 10px; margin-top: 20px; justify-content: center; }
+        .nav a {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+        .filters {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        .filters form { display: inline-flex; gap: 15px; align-items: center; }
+        .filters select {
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .report-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .report-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .report-header h2 { font-size: 1.8em; margin-bottom: 10px; }
+        .report-header .info { opacity: 0.9; }
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9ff;
+        }
+        .summary-item {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .summary-item .label { color: #666; font-size: 0.9em; margin-bottom: 5px; }
+        .summary-item .value { font-size: 1.8em; font-weight: bold; color: #333; }
+        .summary-item .value.division-I { color: #28a745; }
+        .summary-item .value.division-II { color: #17a2b8; }
+        .summary-item .value.division-III { color: #ffc107; }
+        .summary-item .value.division-IV { color: #dc3545; }
+        
+        .subjects-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .subjects-table th, .subjects-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .subjects-table th { background: #667eea; color: white; }
+        .subjects-table tr:hover { background: #f8f9ff; }
+        
+        .grade-1 { color: #28a745; font-weight: bold; }
+        .grade-2 { color: #17a2b8; font-weight: bold; }
+        .grade-3 { color: #6c757d; font-weight: bold; }
+        .grade-4 { color: #ffc107; font-weight: bold; }
+        .grade-5 { color: #fd7e14; }
+        .grade-6, .grade-7 { color: #dc3545; }
+        
+        .footer {
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .grade-legend {
+            padding: 20px 30px;
+            background: #f8f9ff;
+        }
+        .grade-legend h4 { margin-bottom: 10px; color: #333; }
+        .grade-legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+        }
+        .grade-legend-item { text-align: center; font-size: 0.85em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Student Report Card</h1>
+            <p>Primary School Management System</p>
+            <div class="nav">
+                <a href="/performance/dashboard">Dashboard</a>
+                <a th:href="@{/performance/class/{id}(id=${student.classroom.id},term=${selectedTerm},year=${selectedYear})}">Back to Class</a>
+            </div>
+        </div>
+
+        <div class="filters">
+            <form th:action="@{/performance/student-report/{id}(id=${student.id})}" method="get">
+                <label>Term:</label>
+                <select name="term">
+                    <option th:each="t : ${availableTerms}" th:value="${t}" th:text="'Term ' + ${t}" th:selected="${t == selectedTerm}">Term 1</option>
+                </select>
+                <label>Year:</label>
+                <select name="year">
+                    <option th:each="y : ${availableYears}" th:value="${y}" th:text="${y}" th:selected="${y == selectedYear}">2024</option>
+                </select>
+                <button type="submit" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer;">View Report</button>
+            </form>
+        </div>
+
+        <div class="report-card">
+            <div class="report-header">
+                <h2 th:text="${student.name}">John Doe</h2>
+                <div class="info">
+                    Class: <span th:text="${student.classroom.name}">P.1</span> | 
+                    Term: <span th:text="${selectedTerm}">1</span> | 
+                    Year: <span th:text="${selectedYear}">2024</span>
+                </div>
+            </div>
+
+            <div class="summary">
+                <div class="summary-item">
+                    <div class="label">Total Marks</div>
+                    <div class="value" th:text="${totalMarks}">450</div>
+                </div>
+                <div class="summary-item">
+                    <div class="label">Average Score</div>
+                    <div class="value" th:text="${averageScore + '%'}">75%</div>
+                </div>
+                <div class="summary-item">
+                    <div class="label">Aggregate</div>
+                    <div class="value" th:text="${aggregate}">12</div>
+                </div>
+                <div class="summary-item">
+                    <div class="label">Division</div>
+                    <div class="value" th:class="${'division-' + division}" th:text="${division}">I</div>
+                </div>
+            </div>
+
+            <table class="subjects-table">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Marks</th>
+                        <th>Grade</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="perf : ${performances}">
+                        <td th:text="${perf.subject.name}">English</td>
+                        <td th:text="${perf.marks}">85</td>
+                        <td th:class="${'grade-' + perf.grade}" th:text="${perf.grade}">1</td>
+                        <td>
+                            <span th:switch="${perf.grade}">
+                                <span th:case="'1'">Distinction</span>
+                                <span th:case="'2'">Very Good</span>
+                                <span th:case="'3'">Good</span>
+                                <span th:case="'4'">Satisfactory</span>
+                                <span th:case="'5'">Pass</span>
+                                <span th:case="'6'">Below Pass</span>
+                                <span th:case="'7'">Fail</span>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="grade-legend">
+                <h4>Uganda Primary School Grading System</h4>
+                <div class="grade-legend-grid">
+                    <div class="grade-legend-item"><span class="grade-1">1</span> - 80-100 (Distinction)</div>
+                    <div class="grade-legend-item"><span class="grade-2">2</span> - 70-79 (Very Good)</div>
+                    <div class="grade-legend-item"><span class="grade-3">3</span> - 60-69 (Good)</div>
+                    <div class="grade-legend-item"><span class="grade-4">4</span> - 50-59 (Satisfactory)</div>
+                    <div class="grade-legend-item"><span class="grade-5">5</span> - 40-49 (Pass)</div>
+                    <div class="grade-legend-item"><span class="grade-6">6</span> - 30-39 (Below Pass)</div>
+                    <div class="grade-legend-item"><span class="grade-7">7</span> - 0-29 (Fail)</div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p>Generated by Primary School Management System</p>
+                <p>Division I: 4-12 | Division II: 13-23 | Division III: 24-33 | Division IV: 34-40</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

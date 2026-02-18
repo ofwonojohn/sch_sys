@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Management - Primary School System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .header h1 {
+            color: #333;
+            font-size: 2em;
+        }
+        .header p {
+            color: #666;
+            margin-top: 10px;
+        }
+        .nav {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .nav a {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+        .nav a:hover {
+            background: #5568d3;
+        }
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .card p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .card a {
+            display: inline-block;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: transform 0.3s;
+        }
+        .card a:hover {
+            transform: scale(1.05);
+        }
+        .class-list {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .class-list h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .class-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        .class-item:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        .class-item h4 {
+            color: #333;
+            font-size: 1.2em;
+        }
+        .class-item span {
+            color: #666;
+        }
+        .class-item a {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+        .class-item a:hover {
+            background: #5568d3;
+        }
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Performance Management</h1>
+            <p>View and manage student performance across all classes</p>
+            <div class="nav">
+                <a href="/">Home</a>
+                <a href="/classes">Classes</a>
+                <a href="/students">Students</a>
+                <a href="/teachers">Teachers</a>
+            </div>
+        </div>
+
+        <div th:if="${param.success}" class="alert alert-success">
+            Operation completed successfully!
+        </div>
+        <div th:if="${param.error}" class="alert alert-error">
+            An error occurred. Please try again.
+        </div>
+
+        <div class="cards">
+            <div class="card">
+                <h3>📝 Enter Marks</h3>
+                <p>Enter marks for students in a specific class, subject, and term</p>
+                <a href="#">Select Class →</a>
+            </div>
+            <div class="card">
+                <h3>📈 Class Performance</h3>
+                <p>View overall performance, rankings, and analysis for a class</p>
+                <a href="#">Select Class →</a>
+            </div>
+            <div class="card">
+                <h3>🏆 Top Performers</h3>
+                <p>View the top 3 students in each class</p>
+                <a href="#">View Top 3 →</a>
+            </div>
+            <div class="card">
+                <h3>📊 Subject Analysis</h3>
+                <p>Analyze subject-wise performance across the school</p>
+                <a href="#">View Analysis →</a>
+            </div>
+            <div class="card">
+                <h3>📋 Report Cards</h3>
+                <p>Generate individual student report cards</p>
+                <a href="#">View Reports →</a>
+            </div>
+            <div class="card">
+                <h3>✏️ Edit Marks</h3>
+                <p>Edit or update existing marks</p>
+                <a href="#">Edit Marks →</a>
+            </div>
+        </div>
+
+        <div class="class-list" style="margin-top: 30px;">
+            <h2>Select a Class</h2>
+            <div th:each="classroom : ${classrooms}" class="class-item">
+                <div>
+                    <h4 th:text="${classroom.name}">P.1</h4>
+                    <span th:text="${#lists.size(classroom.students)} + ' Students'">30 Students</span>
+                </div>
+                <div>
+                    <a th:href="@{/performance/class/{id}(id=${classroom.id})}">View Performance</a>
+                    <a th:href="@{/performance/enter-marks/{id}(id=${classroom.id})}" style="margin-left: 10px; background: #28a745;">Enter Marks</a>
+                </div>
+            </div>
+            <div th:if="${#lists.isEmpty(classrooms)}" style="text-align: center; padding: 40px; color: #666;">
+                <p>No classes found. Please add classes first.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
