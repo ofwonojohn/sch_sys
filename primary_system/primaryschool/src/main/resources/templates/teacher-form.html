@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Form</title>
+    <link rel="stylesheet" th:href="@{/css/teacher-form.css}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Teacher Registration</h2>
+            <a th:href="@{/teachers}" class="back-link">← Back to Teachers</a>
+        </div>
+
+        <form th:action="@{/teachers/save}" th:object="${teacher}" method="post" class="teacher-form">
+            <!-- Basic Information -->
+            <div class="form-section">
+                <h3>Basic Information</h3>
+                <div class="form-group">
+                    <label for="name">Teacher Name:</label>
+                    <input type="text" id="name" th:field="*{name}" placeholder="Enter teacher name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address:</label>
+                    <input type="email" id="email" th:field="*{email}" placeholder="Enter email address" required>
+                </div>
+            </div>
+
+            <!-- Subjects Assignment -->
+            <div class="form-section">
+                <h3>Assign Subjects</h3>
+                <p class="hint">Select the subjects this teacher will teach:</p>
+                <div class="checkbox-grid">
+                    <div th:each="subject : ${subjects}" class="checkbox-item">
+                        <input type="checkbox" 
+                               th:id="${'subject-' + subject.id}" 
+                               th:value="${subject.id}" 
+                               th:field="*{subjects}">
+                        <label th:for="${'subject-' + subject.id}" th:text="${subject.name}">Subject Name</label>
+                    </div>
+                </div>
+                <p th:if="${subjects.empty}" class="no-data">No subjects available. Please add subjects first.</p>
+            </div>
+
+            <!-- Classrooms Assignment -->
+            <div class="form-section">
+                <h3>Assign Classrooms</h3>
+                <p class="hint">Select the classrooms this teacher will teach in:</p>
+                <div class="checkbox-grid">
+                    <div th:each="classroom : ${classrooms}" class="checkbox-item">
+                        <input type="checkbox" 
+                               th:id="${'classroom-' + classroom.id}" 
+                               th:value="${classroom.id}" 
+                               th:field="*{classrooms}">
+                        <label th:for="${'classroom-' + classroom.id}" th:text="${classroom.name}">Class Name</label>
+                    </div>
+                </div>
+                <p th:if="${classrooms.empty}" class="no-data">No classrooms available. Please add classrooms first.</p>
+            </div>
+
+            <!-- Class Teacher Assignment -->
+            <div class="form-section">
+                <h3>Class Teacher Assignment (Optional)</h3>
+                <p class="hint">Select a class this teacher will be the class teacher of:</p>
+                <div class="form-group">
+                    <select id="classTeacher" name="classTeacher" class="dropdown">
+                        <option value="">-- No Class Teacher Assignment --</option>
+                        <option th:each="classroom : ${classrooms}" 
+                                th:value="${classroom.id}" 
+                                th:text="${'Class ' + classroom.name}">Class Name</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">Save Teacher</button>
+                <a th:href="@{/teachers}" class="btn-cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
