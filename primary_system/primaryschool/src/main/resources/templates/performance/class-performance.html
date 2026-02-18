@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Performance - Primary School System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .header h1 {
+            color: #333;
+            font-size: 2em;
+        }
+        .header p {
+            color: #666;
+            margin-top: 10px;
+        }
+        .nav {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .nav a {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+        .nav a:hover {
+            background: #5568d3;
+        }
+        .filters {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .filters form {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .filters select, .filters button {
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .filters button {
+            background: #667eea;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .filters button:hover {
+            background: #5568d3;
+        }
+        .top-performers {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .top-performers h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .top-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .top-card {
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .top-card.gold {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #333;
+        }
+        .top-card.silver {
+            background: linear-gradient(135deg, #c0c0c0 0%, #e8e8e8 100%);
+            color: #333;
+        }
+        .top-card.bronze {
+            background: linear-gradient(135deg, #cd7f32 0%, #e8a85c 100%);
+            color: #fff;
+        }
+        .top-card:hover {
+            transform: scale(1.05);
+        }
+        .top-card .rank {
+            font-size: 2em;
+            font-weight: bold;
+        }
+        .top-card .name {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+        .top-card .stats {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        .results-table {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow-x: auto;
+        }
+        .results-table h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+        tr:hover {
+            background: #f8f9ff;
+        }
+        .position-1 {
+            background: #ffd700 !important;
+            font-weight: bold;
+        }
+        .position-2 {
+            background: #c0c0c0 !important;
+        }
+        .position-3 {
+            background: #cd7f32 !important;
+            color: white;
+        }
+        .division-I {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .division-II {
+            color: #17a2b8;
+            font-weight: bold;
+        }
+        .division-III {
+            color: #ffc107;
+            font-weight: bold;
+        }
+        .division-IV {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .grade-1 { color: #28a745; font-weight: bold; }
+        .grade-2 { color: #17a2b8; font-weight: bold; }
+        .grade-3 { color: #6c757d; font-weight: bold; }
+        .grade-4 { color: #ffc107; font-weight: bold; }
+        .grade-5 { color: #fd7e14; }
+        .grade-6, .grade-7 { color: #dc3545; }
+        
+        .subject-analysis {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .subject-analysis h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .subject-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .subject-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        .subject-card:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+        }
+        .subject-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .subject-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+            background: #f8f9ff;
+            border-radius: 8px;
+        }
+        .stat-label {
+            font-size: 0.8em;
+            color: #666;
+        }
+        .stat-value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+        }
+        .grade-dist {
+            margin-top: 15px;
+        }
+        .grade-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 5px 0;
+        }
+        .grade-label {
+            width: 30px;
+            font-weight: bold;
+        }
+        .grade-progress {
+            flex: 1;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .grade-fill {
+            height: 100%;
+            background: #667eea;
+            border-radius: 10px;
+        }
+        .grade-count {
+            width: 30px;
+            text-align: right;
+        }
+        
+        .action-btn {
+            padding: 6px 12px;
+            background: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Class Performance - <span th:text="${classroom.name}">P.1</span></h1>
+            <p>Term <span th:text="${selectedTerm}">1</span>, Year <span th:text="${selectedYear}">2024</span></p>
+            <div class="nav">
+                <a href="/performance/dashboard">← Back to Dashboard</a>
+                <a th:href="@{/performance/enter-marks/{id}(id=${classroom.id},term=${selectedTerm},year=${selectedYear})}">Enter Marks</a>
+                <a th:href="@{/performance/subject-analysis/{id}(id=${classroom.id},term=${selectedTerm},year=${selectedYear})}">Subject Analysis</a>
+            </div>
+        </div>
+
+        <div class="filters">
+            <form th:action="@{/performance/class/{id}(id=${classroom.id})}" method="get">
+                <label>Term:</label>
+                <select name="term">
+                    <option th:each="t : ${availableTerms}" 
+                            th:value="${t}" 
+                            th:text="'Term ' + ${t}"
+                            th:selected="${t == selectedTerm}">Term 1</option>
+                </select>
+                <label>Year:</label>
+                <select name="year">
+                    <option th:each="y : ${availableYears}" 
+                            th:value="${y}" 
+                            th:text="${y}"
+                            th:selected="${y == selectedYear}">2024</option>
+                </select>
+                <button type="submit">View Performance</button>
+            </form>
+        </div>
+
+        <!-- Top 3 Performers -->
+        <div class="top-performers" th:if="${not #lists.isEmpty(top3)}">
+            <h2>🏆 Top 3 Performers</h2>
+            <div class="top-cards">
+                <div class="top-card gold" th:if="${top3.size() > 0}">
+                    <div class="rank">🥇</div>
+                    <div class="name" th:text="${top3[0].student.name}">John Doe</div>
+                    <div class="stats">
+                        Total: <span th:text="${top3[0].totalMarks}">450</span> | 
+                        Avg: <span th:text="${top3[0].averageScore}">75</span>% | 
+                        Div: <span th:text="${top3[0].division}">I</span>
+                    </div>
+                </div>
+                <div class="top-card silver" th:if="${top3.size() > 1}">
+                    <div class="rank">🥈</div>
+                    <div class="name" th:text="${top3[1].student.name}">Jane Smith</div>
+                    <div class="stats">
+                        Total: <span th:text="${top3[1].totalMarks}">440</span> | 
+                        Avg: <span th:text="${top3[1].averageScore}">73</span>% | 
+                        Div: <span th:text="${top3[1].division}">I</span>
+                    </div>
+                </div>
+                <div class="top-card bronze" th:if="${top3.size() > 2}">
+                    <div class="rank">🥉</div>
+                    <div class="name" th:text="${top3[2].student.name}">Bob Wilson</div>
+                    <div class="stats">
+                        Total: <span th:text="${top3[2].totalMarks}">430</span> | 
+                        Avg: <span th:text="${top3[2].averageScore}">72</span>% | 
+                        Div: <span th:text="${top3[2].division}">II</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Table -->
+        <div class="results-table">
+            <h2>📋 Student Results</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Pos</th>
+                        <th>Student Name</th>
+                        <th>Total Marks</th>
+                        <th>Average</th>
+                        <th>Aggregate</th>
+                        <th>Division</th>
+                        <th>Subject Grades</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="result : ${results}" 
+                        th:class="${result.position == 1} ? 'position-1' : (${result.position == 2} ? 'position-2' : (${result.position == 3} ? 'position-3' : ''))">
+                        <td th:text="${result.position}">1</td>
+                        <td th:text="${result.student.name}">John Doe</td>
+                        <td th:text="${result.totalMarks}">450</td>
+                        <td th:text="${result.averageScore} + '%'">75%</td>
+                        <td th:text="${result.aggregate}">12</td>
+                        <td>
+                            <span th:class="${'division-' + result.division}" th:text="'Division ' + ${result.division}">Division I</span>
+                        </td>
+                        <td>
+                            <span th:each="entry : ${result.subjectGrades}" class="grade-item">
+                                <span th:class="${'grade-' + entry.value}" th:text="${entry.key.substring(0,3) + ':' + entry.value}">Eng:1</span>
+                            </span>
+                        </td>
+                        <td>
+                            <a th:href="@{/performance/student-report/{id}(id=${result.student.id},term=${selectedTerm},year=${selectedYear})}" 
+                               class="action-btn">View Report</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div th:if="${#lists.isEmpty(results)}" style="text-align: center; padding: 40px; color: #666;">
+                <p>No performance data available for this class yet.</p>
+                <a th:href="@{/performance/enter-marks/{id}(id=${classroom.id},term=${selectedTerm},year=${selectedYear})}" 
+                   style="display: inline-block; margin-top: 15px; padding: 12px 25px; background: #28a745; color: white; text-decoration: none; border-radius: 8px;">
+                    Enter Marks Now
+                </a>
+            </div>
+        </div>
+
+        <!-- Subject Analysis -->
+        <div class="subject-analysis" th:if="${not #lists.isEmpty(subjectAnalysis)}">
+            <h2>📊 Subject Performance Analysis</h2>
+            <div class="subject-grid">
+                <div class="subject-card" th:each="analysis : ${subjectAnalysis}">
+                    <h3 th:text="${analysis.subjectName}">English</h3>
+                    <div class="subject-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Average</div>
+                            <div class="stat-value" th:text="${analysis.averageMarks} + '%'">75%</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Students</div>
+                            <div class="stat-value" th:text="${analysis.totalStudents}">30</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Highest</div>
+                            <div class="stat-value" th:text="${analysis.highestMarks}">98</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Lowest</div>
+                            <div class="stat-value" th:text="${analysis.lowestMarks}">35</div>
+                        </div>
+                    </div>
+                    <div class="grade-dist">
+                        <div class="grade-bar" th:each="entry : ${analysis.gradeDistribution}">
+                            <div class="grade-label" th:text="'D' + ${entry.key}">D1</div>
+                            <div class="grade-progress">
+                                <div class="grade-fill" 
+                                     th:style="'width: ' + (${entry.value} * 100.0 / ${analysis.totalStudents}) + '%'"></div>
+                            </div>
+                            <div class="grade-count" th:text="${entry.value}">5</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
