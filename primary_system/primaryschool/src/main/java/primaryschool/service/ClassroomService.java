@@ -21,4 +21,8 @@ public class ClassroomService {
     public Classroom getClassroomById(Long id) {
         return classroomRepository.findById(id).orElse(null);
     }
+
+    public Classroom saveClassroom(Classroom classroom) {
+        return classroomRepository.save(classroom);
+    }
 }
