@@ -14,6 +14,10 @@ public class ClassroomService {
     @Autowired
     private ClassroomRepository classroomRepository;
 
+    public List<Classroom> getAllClassrooms() {
+        return classroomRepository.findAll();
+    }
+
     public List<Classroom> getAllClasses() {
         return classroomRepository.findAll();
     }

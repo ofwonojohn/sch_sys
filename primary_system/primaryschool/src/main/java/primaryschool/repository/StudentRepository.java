@@ -13,4 +13,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     List<Student> findByClassroom(Classroom classroom);
 
+    List<Student> findByClassroomId(Long classroomId);
+
 }
